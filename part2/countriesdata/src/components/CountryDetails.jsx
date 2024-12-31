@@ -6,7 +6,12 @@ const CountryDetails = ({ country }) => {
       <h2>{country.name.common}</h2>
       <p>Capital: {country.capital}</p>
       <p>Area: {country.area} km²</p>
-      <p>Languages: {Object.values(country.languages).join(', ')}</p>
+      <p>Languages:</p>
+      <ul>
+        {Object.values(country.languages).map((language, index) => (
+          <li key={index}>{language}</li>
+        ))}
+      </ul>
       <img src={country.flags.png} alt={`Flag of ${country.name.common}`} width="150" />
     </div>
   )
