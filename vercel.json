@@ -1,0 +1,12 @@
+{
+  "projects": [
+    {
+      "name": "phonebook-frontend",
+      "rootDirectory": "part3/phonebook-cont"
+    },
+    {
+      "name": "phonebook-backend",
+      "rootDirectory": "part3/phonebook-backend"
+    }
+  ]
+}
