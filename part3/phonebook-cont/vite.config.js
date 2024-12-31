@@ -8,7 +8,7 @@ export default defineConfig({
   server: {
     proxy: {
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'https://phonebook-backend-mu.vercel.app/',
         changeOrigin: true,
       },
     },
