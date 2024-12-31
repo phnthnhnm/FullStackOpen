@@ -23,6 +23,18 @@ app.get('/api/persons/:id', (req, res) => {
   }
 })
 
+app.delete('/api/persons/:id', (req, res) => {
+  const id = Number(req.params.id)
+  const index = persons.findIndex((person) => person.id === id)
+
+  if (index !== -1) {
+    persons.splice(index, 1)
+    res.status(204).end()
+  } else {
+    res.status(404).end()
+  }
+})
+
 app.get('/info', (req, res) => {
   const entryCount = persons.length
   const requestTime = new Date()
