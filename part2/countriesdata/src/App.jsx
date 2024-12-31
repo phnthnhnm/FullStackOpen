@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import countriesService from './services/countries'
 import CountryList from './components/CountryList'
+import CountryDetails from './components/CountryDetails'
 
 const App = () => {
   const [countries, setCountries] = useState([])
@@ -28,7 +29,8 @@ const App = () => {
         Find countries: <input value={search} onChange={handleSearchChange} />
       </div>
       {filteredCountries.length > 10 && <p>Too many matches, specify another filter</p>}
-      {filteredCountries.length <= 10 && <CountryList countries={filteredCountries} />}
+      {filteredCountries.length <= 10 && filteredCountries.length > 1 && <CountryList countries={filteredCountries} />}
+      {filteredCountries.length === 1 && <CountryDetails country={filteredCountries[0]} />}
     </div>
   )
 }
