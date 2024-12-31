@@ -4,6 +4,7 @@ import Filter from './components/Filter'
 import PersonForm from './components/PersonForm'
 import Persons from './components/Persons'
 import Notification from './components/Notification'
+import ErrorNotification from './components/ErrorNotification'
 
 const App = () => {
   const [persons, setPersons] = useState([])
@@ -11,6 +12,7 @@ const App = () => {
   const [newNumber, setNewNumber] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [notification, setNotification] = useState(null)
+  const [error, setError] = useState(null)
 
   useEffect(() => {
     personsService.getAll().then((initialPersons) => {
@@ -24,15 +26,24 @@ const App = () => {
     if (existingPerson) {
       if (window.confirm(`${newName} is already added to phonebook, replace the old number with a new one?`)) {
         const updatedPerson = { ...existingPerson, number: newNumber }
-        personsService.update(existingPerson.id, updatedPerson).then((returnedPerson) => {
-          setPersons(persons.map((person) => (person.id !== existingPerson.id ? person : returnedPerson)))
-          setNewName('')
-          setNewNumber('')
-          setNotification(`Updated ${returnedPerson.name}'s number`)
-          setTimeout(() => {
-            setNotification(null)
-          }, 5000)
-        })
+        personsService
+          .update(existingPerson.id, updatedPerson)
+          .then((returnedPerson) => {
+            setPersons(persons.map((person) => (person.id !== existingPerson.id ? person : returnedPerson)))
+            setNewName('')
+            setNewNumber('')
+            setNotification(`Updated ${returnedPerson.name}'s number`)
+            setTimeout(() => {
+              setNotification(null)
+            }, 5000)
+          })
+          .catch((error) => {
+            setError(`Information of ${newName} has already been removed from server`)
+            setTimeout(() => {
+              setError(null)
+            }, 5000)
+            setPersons(persons.filter((p) => p.id !== existingPerson.id))
+          })
       }
     } else {
       const personObject = {
@@ -81,6 +92,7 @@ const App = () => {
     <div>
       <h2>Phonebook</h2>
       <Notification message={notification} />
+      <ErrorNotification message={error} />
       <Filter searchTerm={searchTerm} handleSearchChange={handleSearchChange} />
 
       <h3>Add a new person</h3>
