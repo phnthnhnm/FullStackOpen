@@ -38,19 +38,14 @@ app.post('/api/persons', (req, res) => {
     return res.status(400).json({ error: 'name or number missing' })
   }
 
-  const nameExists = persons.some((person) => person.name === body.name)
-  if (nameExists) {
-    return res.status(400).json({ error: 'name must be unique' })
-  }
-
-  const newPerson = {
-    id: Math.floor(Math.random() * 1000000),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  }
+  })
 
-  persons.push(newPerson)
-  res.json(newPerson)
+  person.save().then((savedPerson) => {
+    res.json(savedPerson)
+  })
 })
 
 app.delete('/api/persons/:id', (req, res) => {
