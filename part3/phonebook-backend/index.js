@@ -49,15 +49,15 @@ app.post('/api/persons', (req, res) => {
 })
 
 app.delete('/api/persons/:id', (req, res) => {
-  const id = Number(req.params.id)
-  const index = persons.findIndex((person) => person.id === id)
-
-  if (index !== -1) {
-    persons.splice(index, 1)
-    res.status(204).end()
-  } else {
-    res.status(404).end()
-  }
+  Person.findByIdAndDelete(req.params.id)
+    .then((result) => {
+      if (result) {
+        res.status(204).end()
+      } else {
+        res.status(404).end()
+      }
+    })
+    .catch((error) => res.status(500).json({ error: 'malformatted id' }))
 })
 
 app.get('/info', (req, res) => {
