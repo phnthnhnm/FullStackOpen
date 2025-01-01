@@ -38,7 +38,7 @@ const App = () => {
             }, 5000)
           })
           .catch((error) => {
-            setError(`Information of ${newName} has already been removed from server`)
+            setError(error.response.data.error)
             setTimeout(() => {
               setError(null)
             }, 5000)
@@ -50,15 +50,24 @@ const App = () => {
         name: newName,
         number: newNumber,
       }
-      personsService.create(personObject).then((returnedPerson) => {
-        setPersons(persons.concat(returnedPerson))
-        setNewName('')
-        setNewNumber('')
-        setNotification(`Added ${returnedPerson.name}`)
-        setTimeout(() => {
-          setNotification(null)
-        }, 5000)
-      })
+      personsService
+        .create(personObject)
+        .then((returnedPerson) => {
+          setPersons(persons.concat(returnedPerson))
+          setNewName('')
+          setNewNumber('')
+          setNotification(`Added ${returnedPerson.name}`)
+          setTimeout(() => {
+            setNotification(null)
+          }, 5000)
+        })
+        .catch((error) => {
+          console.log(error.response.data.error)
+          setError(error.response.data.error)
+          setTimeout(() => {
+            setError(null)
+          }, 5000)
+        })
     }
   }
 
