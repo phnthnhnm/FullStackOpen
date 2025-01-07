@@ -30,6 +30,27 @@ test('unique identifier property of the blog posts is named id', async () => {
   })
 })
 
+test('a valid blog can be added', async () => {
+  const newBlog = {
+    title: 'Async/Await in JavaScript',
+    author: 'John Doe',
+    url: 'http://example.com/async-await',
+    likes: 10,
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+  assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length + 1)
+
+  const titles = blogsAtEnd.map((blog) => blog.title)
+  assert(titles.includes('Async/Await in JavaScript'))
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
