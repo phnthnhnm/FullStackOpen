@@ -51,6 +51,23 @@ test('a valid blog can be added', async () => {
   assert(titles.includes('Async/Await in JavaScript'))
 })
 
+test('blog without likes defaults to 0', async () => {
+  const newBlog = {
+    title: 'No Likes Blog',
+    author: 'Jane Doe',
+    url: 'http://example.com/no-likes',
+  }
+
+  const response = await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type', /application\/json/)
+
+  const savedBlog = response.body
+  assert.strictEqual(savedBlog.likes, 0)
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
