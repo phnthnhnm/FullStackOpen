@@ -111,6 +111,29 @@ describe('when there are initially some blogs saved', () => {
       assert(!titles.includes(blogToDelete.title))
     })
   })
+
+  describe('updating a blog', () => {
+    test('a blog can be updated', async () => {
+      const blogsAtStart = await helper.blogsInDb()
+      const blogToUpdate = blogsAtStart[0]
+
+      const updatedBlogData = {
+        title: blogToUpdate.title,
+        author: blogToUpdate.author,
+        url: blogToUpdate.url,
+        likes: blogToUpdate.likes + 1,
+      }
+
+      const response = await api
+        .put(`/api/blogs/${blogToUpdate.id}`)
+        .send(updatedBlogData)
+        .expect(200)
+        .expect('Content-Type', /application\/json/)
+
+      const updatedBlog = response.body
+      assert.strictEqual(updatedBlog.likes, blogToUpdate.likes + 1)
+    })
+  })
 })
 
 after(async () => {
