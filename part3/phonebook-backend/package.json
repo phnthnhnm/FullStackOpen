@@ -2,11 +2,6 @@
   "name": "phonebook-backend",
   "version": "1.0.0",
   "description": "",
-  "homepage": "https://github.com/phnthnhnm/phonebook-backend",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/phnthnhnm/phonebook-backend.git"
-  },
   "license": "GPL-3.0-only",
   "author": "phnthnhnm",
   "type": "commonjs",
