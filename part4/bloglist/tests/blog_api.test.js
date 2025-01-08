@@ -134,13 +134,24 @@ describe('when there are initially some blogs saved', () => {
 
   describe('deletion of a blog', () => {
     test('a blog can be deleted', async () => {
-      const blogsAtStart = await helper.blogsInDb()
-      const blogToDelete = blogsAtStart[0]
+      const blogToDelete = {
+        title: 'To-be-deleted',
+        author: 'John Doe',
+        url: 'http://delete.com/',
+        likes: 1,
+      }
 
-      await api.delete(`/api/blogs/${blogToDelete.id}`).set('Authorization', `Bearer ${token}`).expect(204)
+      const response = await api.post('/api/blogs').send(blogToDelete).set('Authorization', `Bearer ${token}`)
+
+      const id = response.body.id
+
+      const blogsAtStart = await helper.blogsInDb()
+
+      await api.delete(`/api/blogs/${id}`).set('Authorization', `Bearer ${token}`).expect(204)
 
       const blogsAtEnd = await helper.blogsInDb()
-      assert.strictEqual(blogsAtEnd.length, helper.initialBlogs.length - 1)
+
+      assert.strictEqual(blogsAtEnd.length, blogsAtStart.length - 1)
 
       const titles = blogsAtEnd.map((blog) => blog.title)
       assert(!titles.includes(blogToDelete.title))
