@@ -19,3 +19,5 @@ This repository contains my solutions to the exercises and projects for the 2024
 ### Part 2 - [Communicating with server](part2/)
 
 ### Part 3 - [Programming a server with NodeJS and Express](part3/)
+
+### Part 4 - [Testing Express servers, user administration](part4/)
