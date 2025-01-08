@@ -1,7 +1,5 @@
 const blogsRouter = require('express').Router()
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (req, res) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
@@ -10,12 +8,11 @@ blogsRouter.get('/', async (req, res) => {
 
 blogsRouter.post('/', async (req, res) => {
   const body = req.body
-  const decodedToken = jwt.verify(req.token, process.env.SECRET)
+  const user = req.user
 
-  if (!decodedToken.id) {
+  if (!user) {
     return res.status(401).json({ error: 'token invalid' })
   }
-  const user = await User.findById(decodedToken.id)
 
   if (!body.title || !body.url) {
     return res.status(400).json({ error: 'title or url missing' })
@@ -51,8 +48,8 @@ blogsRouter.put('/:id', async (req, res) => {
 })
 
 blogsRouter.delete('/:id', async (req, res) => {
-  const decodedToken = jwt.verify(req.token, process.env.SECRET)
-  if (!decodedToken.id) {
+  const user = req.user
+  if (!user) {
     return res.status(401).json({ error: 'token invalid' })
   }
 
@@ -61,7 +58,7 @@ blogsRouter.delete('/:id', async (req, res) => {
     return res.status(404).json({ error: 'blog not found' })
   }
 
-  if (blog.user.toString() !== decodedToken.id) {
+  if (blog.user.toString() !== user._id.toString()) {
     return res.status(401).json({ error: 'only the creator can delete this blog' })
   }
 
